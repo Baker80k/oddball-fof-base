@@ -1,4 +1,4 @@
-# oddball-base
+# oddball-fof-base
 Fistful of Frags Oddball Weapon
 
 ## PRESENT ISSUES
