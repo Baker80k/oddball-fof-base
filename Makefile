@@ -36,15 +36,18 @@ override customguns_inc_files=$(shell find customguns-fof/scripting/include -nam
 customguns_plugin: $(customguns_sps:customguns-fof/scripting/%.sp=$(plugins_dir)/%.smx)
 
 $(plugins_dir)/%.smx: customguns-fof/scripting/%.sp $(customguns_incs) $(customguns_inc_files)
+	mkdir -p fof/addons/sourcemod/plugins
 	@$(SPCOMP) $< -o $@ $(customguns_inc_flags) -O2 -v2
 
 # Other
 customguns_other: fof/addons/sourcemod/gamedata/customguns.txt fof/addons/sourcemod/configs/customguns_styles.txt
 	
 fof/addons/sourcemod/gamedata/customguns.txt: customguns-fof/gamedata/customguns.txt
+	mkdir -p fof/addons/sourcemod/gamedata
 	cp customguns-fof/gamedata/customguns.txt fof/addons/sourcemod/gamedata/customguns.txt
 
 fof/addons/sourcemod/configs/customguns_styles.txt: customguns-fof/configs/customguns_styles.txt
+	mkdir -p fof/addons/sourcemod/configs
 	cp customguns-fof/configs/customguns_styles.txt fof/addons/sourcemod/configs/customguns_styles.txt
 
 customguns: customguns_plugin customguns_other
@@ -66,17 +69,17 @@ override oddball_weapon_vtfs=$(shell find $(WEAPON_MODEL_DIR) -name '*.vtf' 2>/d
 
 override oddball_weapon_wavs=$(shell find $(WEAPON_MODEL_DIR) -name '*.wav' 2>/dev/null)
 
-override oddball_sps=$(shell find goon_game -name '*.sp' 2>/dev/null)
-override oddball_incs=goon_game/include $(sourcemod_incs)
+override oddball_sps=$(shell find oddball -name '*.sp' 2>/dev/null)
+override oddball_incs=$(sourcemod_incs)
 override oddball_inc_flags=$(addprefix -i ,$(oddball_incs))
-override oddball_inc_files=$(shell find goon_game/include -name '*.inc')
 
-oddball_plugin: $(oddball_sps:goon_game/%.sp=$(plugins_dir)/%.smx)
+oddball_plugin: $(oddball_sps:oddball/%.sp=$(plugins_dir)/%.smx)
 
-$(plugins_dir)/%.smx: goon_game/%.sp $(oddball_incs) $(oddball_inc_files) $(customguns_incs)
+$(plugins_dir)/%.smx: oddball/%.sp $(oddball_incs) $(oddball_inc_files) $(customguns_incs)
 	@$(SPCOMP) $< -o $@ $(oddball_inc_flags) $(customguns_inc_flags) -O2 -v2
 
 $(custom_dir)/oddball_scripts.vpk: $(oddball_txts)
+	mkdir -p fof/custom
 	${RM} $(custom_dir)/oddball_scripts.vpk
 	$(VPK) a $(custom_dir)/oddball_scripts.vpk $(oddball_txts)
 
@@ -111,7 +114,8 @@ upload: upload_server upload_client
 	cp -u $(WEAPON_MODEL_DIR)/../oddball_assets.vpk "$(FOF_INSTALL_DIR)/fof/custom/oddball_assets.vpk"
 
 # # Make a zip folder containing everything
-release_zip: all $(custom_dir)/oddball_assets.vpk
+release_zip: all
+	mkdir -p fof/custom
 	cp -u $(WEAPON_MODEL_DIR)/../oddball_assets.vpk $(custom_dir)/oddball_assets.vpk 
 	zip -r oddball.zip fof
 

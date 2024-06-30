@@ -62,11 +62,11 @@ oddball_assets.vpk: oddball_models oddball_materials $(oddball_weapon_wavs)
 	@cp -u $(oddball_weapon_phys) oddball_assets/models/weapons
 	@cp -u $(oddball_weapon_vvds) oddball_assets/models/weapons
 
-	@mkdir -p oddball_assets/materials
-	@cp -r $(oddball_weapon_materials) oddball_assets
+#	@mkdir -p oddball_assets/materials
+#	@cp -r $(oddball_weapon_materials) oddball_assets
 
-	@mkdir -p oddball_assets/sound
-	@cp -r $(oddball_weapon_sound) oddball_assets
+#	@mkdir -p oddball_assets/sound
+#	@cp -r $(oddball_weapon_sound) oddball_assets
 
 	$(VPK) oddball_assets
 
@@ -76,7 +76,7 @@ oddball_assets.vpk: oddball_models oddball_materials $(oddball_weapon_wavs)
 $(oddball_weapon_vmdls): $(oddball_weapon_vqcs)
 	@name=$$(dirname $@ | awk -F/ '{print $$NF}'); \
 	cd "working_model_files/$$name/v_$$name"; \
-	python ~/proj/sourcemod/goon-game/workflow/bonemerge_fix.py; \
+	python ~/proj/sourcemod/oddball-base/workflow/bonemerge_fix.py; \
 	$(STUDIOMDL) -game "F:\SteamLibrary\steamapps\common\Fistful of Frags\fof" -nop4 -verbose "v_$$name"; \
 	cd ../../..; \
 	mv /mnt/f/SteamLibrary/steamapps/common/Fistful\ of\ Frags/fof/models/weapons/* working_model_files/$$name/;
