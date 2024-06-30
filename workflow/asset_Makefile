@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-.DEFAULT_GOAL := goongame_assets.vpk
+.DEFAULT_GOAL := oddball_assets.vpk
 
 # The pathing in this project gets a little funny because the valve compilation tools
 # are really particular about where they're executed, so in order to preserve the custom folder strcuture
@@ -9,7 +9,7 @@ SHELL=/bin/bash
 # FOF_INSTALL_DIR // sdk things like vpk and studiomdl
 
 # This makefile should be sitting in the directory above WEAPON_MODEL_DIR
-# It will attempt to copy the required files into a new folder called goongame_models
+# It will attempt to copy the required files into a new folder called oddball_models
 # Which then gets vpk'd
 
 # This is for my setup where I have a windows machine with the game,
@@ -24,56 +24,56 @@ endef
 
 override working_model_dir=$(shell basename $(WEAPON_MODEL_DIR))
 
-override goongame_weapon_folders=$(shell find $(working_model_dir) -maxdepth 1 -mindepth 1 -type d 2>/dev/null)
-override goongame_weapon_names=$(shell find $(working_model_dir) -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
+override oddball_weapon_folders=$(shell find $(working_model_dir) -maxdepth 1 -mindepth 1 -type d 2>/dev/null)
+override oddball_weapon_names=$(shell find $(working_model_dir) -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 
-override goongame_weapon_vmdls=$(foreach name,$(goongame_weapon_names),working_model_files/$(name)/v_$(name).mdl)
-override goongame_weapon_wmdls=$(foreach name,$(goongame_weapon_names),working_model_files/$(name)/w_$(name).mdl)
-override goongame_weapon_mdls=$(goongame_weapon_vmdls) $(goongame_weapon_wmdls)
+override oddball_weapon_vmdls=$(foreach name,$(oddball_weapon_names),working_model_files/$(name)/v_$(name).mdl)
+override oddball_weapon_wmdls=$(foreach name,$(oddball_weapon_names),working_model_files/$(name)/w_$(name).mdl)
+override oddball_weapon_mdls=$(oddball_weapon_vmdls) $(oddball_weapon_wmdls)
 
-override goongame_weapon_vqcs=$(foreach name,$(goongame_weapon_names),working_model_files/$(name)/v_$(name)/v_$(name).qc)
-override goongame_weapon_wqcs=$(foreach name,$(goongame_weapon_names),working_model_files/$(name)/w_$(name)/w_$(name).qc)
-override goongame_weapon_qcs=$(goongame_weapon_vqcs) $(goongame_weapon_wqcs)
+override oddball_weapon_vqcs=$(foreach name,$(oddball_weapon_names),working_model_files/$(name)/v_$(name)/v_$(name).qc)
+override oddball_weapon_wqcs=$(foreach name,$(oddball_weapon_names),working_model_files/$(name)/w_$(name)/w_$(name).qc)
+override oddball_weapon_qcs=$(oddball_weapon_vqcs) $(oddball_weapon_wqcs)
 
-override goongame_weapon_vtxs=$(shell find $(working_model_dir) -name '*.vtx' 2>/dev/null)
-override goongame_weapon_phys=$(shell find $(working_model_dir) -name '*.phy' 2>/dev/null)
-override goongame_weapon_vvds=$(shell find $(working_model_dir) -name '*.vvd' 2>/dev/null)
+override oddball_weapon_vtxs=$(shell find $(working_model_dir) -name '*.vtx' 2>/dev/null)
+override oddball_weapon_phys=$(shell find $(working_model_dir) -name '*.phy' 2>/dev/null)
+override oddball_weapon_vvds=$(shell find $(working_model_dir) -name '*.vvd' 2>/dev/null)
 
-override goongame_weapon_vmts=$(shell find $(working_model_dir) -name '*.vmt' 2>/dev/null)
-override goongame_weapon_vtfs=$(shell find $(working_model_dir) -name '*.vtf' 2>/dev/null)
+override oddball_weapon_vmts=$(shell find $(working_model_dir) -name '*.vmt' 2>/dev/null)
+override oddball_weapon_vtfs=$(shell find $(working_model_dir) -name '*.vtf' 2>/dev/null)
 
-override goongame_weapon_wavs=$(shell find $(working_model_dir) -name '*.wav' 2>/dev/null)
+override oddball_weapon_wavs=$(shell find $(working_model_dir) -name '*.wav' 2>/dev/null)
 
-override all_goongame_weapon_materials=$(foreach path,$(goongame_weapon_vmts),$(call extract_up_to_target,$(path),materials)) $(foreach path,$(goongame_weapon_vtfs),$(call extract_up_to_target,$(path),materials))
-override goongame_weapon_materials=$(shell echo $(all_goongame_weapon_materials) | tr ' ' '\n' | sort -u | tr '\n' ' ')
+override all_oddball_weapon_materials=$(foreach path,$(oddball_weapon_vmts),$(call extract_up_to_target,$(path),materials)) $(foreach path,$(oddball_weapon_vtfs),$(call extract_up_to_target,$(path),materials))
+override oddball_weapon_materials=$(shell echo $(all_oddball_weapon_materials) | tr ' ' '\n' | sort -u | tr '\n' ' ')
 
-override all_goongame_weapon_sound=$(foreach path, $(goongame_weapon_wavs),$(call extract_up_to_target,$(path),sound))
-override goongame_weapon_sound=$(shell echo $(all_goongame_weapon_sound) | tr ' ' '\n' | sort -u | tr '\n' ' ')
+override all_oddball_weapon_sound=$(foreach path, $(oddball_weapon_wavs),$(call extract_up_to_target,$(path),sound))
+override oddball_weapon_sound=$(shell echo $(all_oddball_weapon_sound) | tr ' ' '\n' | sort -u | tr '\n' ' ')
 
-override goongame_weapon_smds=$(shell find $(working_model_dir) -name '*.smd' 2>/dev/null)
+override oddball_weapon_smds=$(shell find $(working_model_dir) -name '*.smd' 2>/dev/null)
 
-goongame_models: $(goongame_weapon_mdls) $(goongame_weapon_phys) $(goongame_weapon_qcs) $(goongame_weapon_smds) $(goongame_weapon_vtxs) $(goongame_weapon_vvds)
-goongame_materials: $(goongame_weapon_vmts) $(goongame_weapon_vtfs)
+oddball_models: $(oddball_weapon_mdls) $(oddball_weapon_phys) $(oddball_weapon_qcs) $(oddball_weapon_smds) $(oddball_weapon_vtxs) $(oddball_weapon_vvds)
+oddball_materials: $(oddball_weapon_vmts) $(oddball_weapon_vtfs)
 
-goongame_assets.vpk: goongame_models goongame_materials $(goongame_weapon_wavs)
-	@mkdir -p goongame_assets/models/weapons
-	@cp -u $(goongame_weapon_mdls) goongame_assets/models/weapons
-	@cp -u $(goongame_weapon_vtxs) goongame_assets/models/weapons
-	@cp -u $(goongame_weapon_phys) goongame_assets/models/weapons
-	@cp -u $(goongame_weapon_vvds) goongame_assets/models/weapons
+oddball_assets.vpk: oddball_models oddball_materials $(oddball_weapon_wavs)
+	@mkdir -p oddball_assets/models/weapons
+	@cp -u $(oddball_weapon_mdls) oddball_assets/models/weapons
+	@cp -u $(oddball_weapon_vtxs) oddball_assets/models/weapons
+	@cp -u $(oddball_weapon_phys) oddball_assets/models/weapons
+	@cp -u $(oddball_weapon_vvds) oddball_assets/models/weapons
 
-	@mkdir -p goongame_assets/materials
-	@cp -r $(goongame_weapon_materials) goongame_assets
+	@mkdir -p oddball_assets/materials
+	@cp -r $(oddball_weapon_materials) oddball_assets
 
-	@mkdir -p goongame_assets/sound
-	@cp -r $(goongame_weapon_sound) goongame_assets
+	@mkdir -p oddball_assets/sound
+	@cp -r $(oddball_weapon_sound) oddball_assets
 
-	$(VPK) goongame_assets
+	$(VPK) oddball_assets
 
 #@last_dir=$$(dirname $@ | awk -F/ '{print $$NF}'); \
 #echo "Processing file: $@ in directory: $$last_dir"; \
 
-$(goongame_weapon_vmdls): $(goongame_weapon_vqcs)
+$(oddball_weapon_vmdls): $(oddball_weapon_vqcs)
 	@name=$$(dirname $@ | awk -F/ '{print $$NF}'); \
 	cd "working_model_files/$$name/v_$$name"; \
 	python ~/proj/sourcemod/goon-game/workflow/bonemerge_fix.py; \
@@ -81,7 +81,7 @@ $(goongame_weapon_vmdls): $(goongame_weapon_vqcs)
 	cd ../../..; \
 	mv /mnt/f/SteamLibrary/steamapps/common/Fistful\ of\ Frags/fof/models/weapons/* working_model_files/$$name/;
 
-$(goongame_weapon_wmdls): $(goongame_weapon_wqcs)
+$(oddball_weapon_wmdls): $(oddball_weapon_wqcs)
 	@name=$$(dirname $@ | awk -F/ '{print $$NF}'); \
 	cd "working_model_files/$$name/w_$$name"; \
 	$(STUDIOMDL) -game "F:\SteamLibrary\steamapps\common\Fistful of Frags\fof" -nop4 -verbose "w_$$name"; \
@@ -94,8 +94,8 @@ test:
 	$(STUDIOMDL) -game "F:\SteamLibrary\steamapps\common\Fistful of Frags\fof" -nop4 -verbose "w_bigiron")
 	@mv /mnt/f/SteamLibrary/steamapps/common/Fistful\ of\ Frags/fof/models/weapons/* working_model_files/bigiron/
 
-test2: $(goongame_weapon_wmdls)
+test2: $(oddball_weapon_wmdls)
 	
 clean:
-	rm -r goongame_assets
-	rm goongame_assets.vpk
+	rm -r oddball_assets
+	rm oddball_assets.vpk

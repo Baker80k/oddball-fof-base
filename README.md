@@ -1,15 +1,13 @@
-# goon-game
-Fistful of Frags gungame with additional weapons
+# oddball-base
+Fistful of Frags Oddball Weapon
 
-# PRESENT ISSUES
+## PRESENT ISSUES
 
-Client-side prediction causes viewmodels to flicker, or reload buttons need to be pressed multiple times, or the viewmodel to be entirely absent. Looking for a proper workaround.
+Client-Side Prediction causes the base weapon's sound to play.
 
-Weapons do not retain their ammo level after being dropped.
+Sometimes the primary attack does not have an animation.
 
-Gauss gun spawns with no ammo and cannot be fired.
-
-When picking up multiple custom guns, only one can ever be active and if dropped the other disappears.
+Secondary attack is not properly disabled.
 
 Custom content is not downloaded to players connecting to server.
 
@@ -25,13 +23,5 @@ Copy fof/custom/*.vpk to your custom folder. Note this is necessary for all play
 
 In console, type "cg weapon_name" to spawn a weapon on the ground.
 
-weapon_crowbar: Half life crowbar
-
-weapon_shovel: Melee from customguns
-
-weapon_gauss: Weapon from customguns
-
-weapon_bigiron: Just a peacemaker model with a longer barrel
-
-weapon_brownbess: From another sourcemod game (battlegrounds 3), just trying stuff out
+weapon_oddball: The oddball! High-damage melee. Forced to equip on pickup, can't switch off unless dropped.
 

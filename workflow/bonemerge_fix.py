@@ -9,7 +9,7 @@
 import os
 import shlex
 
-SUFFIX = "_gg" # For goon-game
+SUFFIX = "_ob" # For oddball
 
 print(f"Bonemerge fix running in {os.getcwd()}")
 

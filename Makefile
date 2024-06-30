@@ -52,40 +52,40 @@ customguns: customguns_plugin customguns_other
 # gungame_plugin:
 
 
-override goongame_txts=$(shell find scripts -name '*.txt' 2>/dev/null)
+override oddball_txts=$(shell find scripts -name '*.txt' 2>/dev/null)
 
-override goongame_weapon_mdls=$(shell find $(WEAPON_MODEL_DIR) -name '*.mdl' 2>/dev/null)
-override goongame_weapon_vtxs=$(shell find $(WEAPON_MODEL_DIR) -name '*.vtx' 2>/dev/null)
-override goongame_weapon_phys=$(shell find $(WEAPON_MODEL_DIR) -name '*.phy' 2>/dev/null)
-override goongame_weapon_vvds=$(shell find $(WEAPON_MODEL_DIR) -name '*.vvd' 2>/dev/null)
+override oddball_weapon_mdls=$(shell find $(WEAPON_MODEL_DIR) -name '*.mdl' 2>/dev/null)
+override oddball_weapon_vtxs=$(shell find $(WEAPON_MODEL_DIR) -name '*.vtx' 2>/dev/null)
+override oddball_weapon_phys=$(shell find $(WEAPON_MODEL_DIR) -name '*.phy' 2>/dev/null)
+override oddball_weapon_vvds=$(shell find $(WEAPON_MODEL_DIR) -name '*.vvd' 2>/dev/null)
 
-override goongame_weapon_smds=$(shell find $(WEAPON_MODEL_DIR) -name '*.smd' 2>/dev/null)
+override oddball_weapon_smds=$(shell find $(WEAPON_MODEL_DIR) -name '*.smd' 2>/dev/null)
 
-override goongame_weapon_vmts=$(shell find $(WEAPON_MODEL_DIR) -name '*.vmt' 2>/dev/null)
-override goongame_weapon_vtfs=$(shell find $(WEAPON_MODEL_DIR) -name '*.vtf' 2>/dev/null)
+override oddball_weapon_vmts=$(shell find $(WEAPON_MODEL_DIR) -name '*.vmt' 2>/dev/null)
+override oddball_weapon_vtfs=$(shell find $(WEAPON_MODEL_DIR) -name '*.vtf' 2>/dev/null)
 
-override goongame_weapon_wavs=$(shell find $(WEAPON_MODEL_DIR) -name '*.wav' 2>/dev/null)
+override oddball_weapon_wavs=$(shell find $(WEAPON_MODEL_DIR) -name '*.wav' 2>/dev/null)
 
-override goongame_sps=$(shell find goon_game -name '*.sp' 2>/dev/null)
-override goongame_incs=goon_game/include $(sourcemod_incs)
-override goongame_inc_flags=$(addprefix -i ,$(goongame_incs))
-override goongame_inc_files=$(shell find goon_game/include -name '*.inc')
+override oddball_sps=$(shell find goon_game -name '*.sp' 2>/dev/null)
+override oddball_incs=goon_game/include $(sourcemod_incs)
+override oddball_inc_flags=$(addprefix -i ,$(oddball_incs))
+override oddball_inc_files=$(shell find goon_game/include -name '*.inc')
 
-goongame_plugin: $(goongame_sps:goon_game/%.sp=$(plugins_dir)/%.smx)
+oddball_plugin: $(oddball_sps:goon_game/%.sp=$(plugins_dir)/%.smx)
 
-$(plugins_dir)/%.smx: goon_game/%.sp $(goongame_incs) $(goongame_inc_files) $(customguns_incs)
-	@$(SPCOMP) $< -o $@ $(goongame_inc_flags) $(customguns_inc_flags) -O2 -v2
+$(plugins_dir)/%.smx: goon_game/%.sp $(oddball_incs) $(oddball_inc_files) $(customguns_incs)
+	@$(SPCOMP) $< -o $@ $(oddball_inc_flags) $(customguns_inc_flags) -O2 -v2
 
-$(custom_dir)/goongame_scripts.vpk: $(goongame_txts)
-	${RM} $(custom_dir)/goongame_scripts.vpk
-	$(VPK) a $(custom_dir)/goongame_scripts.vpk $(goongame_txts)
+$(custom_dir)/oddball_scripts.vpk: $(oddball_txts)
+	${RM} $(custom_dir)/oddball_scripts.vpk
+	$(VPK) a $(custom_dir)/oddball_scripts.vpk $(oddball_txts)
 
-goongame_models: $(goongame_weapon_mdls) $(goongame_weapon_smds) $(goongame_weapon_vtxs) $(goongame_weapon_phys) $(goongame_weapon_vvds)
-goongame_materials: $(goongame_weapon_vmts) $(goongame_weapon_vtfs)
+oddball_models: $(oddball_weapon_mdls) $(oddball_weapon_smds) $(oddball_weapon_vtxs) $(oddball_weapon_phys) $(oddball_weapon_vvds)
+oddball_materials: $(oddball_weapon_vmts) $(oddball_weapon_vtfs)
 
 # TODO: this is extremely hacky, but VPK doesn't want to cooperate
-$(WEAPON_MODEL_DIR)/../goongame_assets.vpk: goongame_models goongame_materials $(goongame_weapon_wavs) asset_makefile
-	${RM} $(WEAPON_MODEL_DIR)/../goongame_assets.vpk
+$(WEAPON_MODEL_DIR)/../oddball_assets.vpk: oddball_models oddball_materials $(oddball_weapon_wavs) asset_makefile
+	${RM} $(WEAPON_MODEL_DIR)/../oddball_assets.vpk
 	(cd $(WEAPON_MODEL_DIR)/.. && make)
 
 $(WEAPON_MODEL_DIR)/../Makefile: workflow/asset_Makefile
@@ -93,9 +93,9 @@ $(WEAPON_MODEL_DIR)/../Makefile: workflow/asset_Makefile
 
 asset_makefile: $(WEAPON_MODEL_DIR)/../Makefile
 
-goongame: $(custom_dir)/goongame_scripts.vpk $(WEAPON_MODEL_DIR)/../goongame_assets.vpk goongame_plugin
+oddball: $(custom_dir)/oddball_scripts.vpk $(WEAPON_MODEL_DIR)/../oddball_assets.vpk oddball_plugin
 
-all: customguns goongame
+all: customguns oddball
 
 # Copy only updated stuff to server and client
 upload_server: all
@@ -107,21 +107,21 @@ upload_client: all
 	cp -r -u fof/custom "$(FOF_INSTALL_DIR)/fof"
 
 upload: upload_server upload_client
-	cp -u $(WEAPON_MODEL_DIR)/../goongame_assets.vpk $(FOF_SERVER_DIR)/fof/custom/goongame_assets.vpk 
-	cp -u $(WEAPON_MODEL_DIR)/../goongame_assets.vpk "$(FOF_INSTALL_DIR)/fof/custom/goongame_assets.vpk"
+	cp -u $(WEAPON_MODEL_DIR)/../oddball_assets.vpk $(FOF_SERVER_DIR)/fof/custom/oddball_assets.vpk 
+	cp -u $(WEAPON_MODEL_DIR)/../oddball_assets.vpk "$(FOF_INSTALL_DIR)/fof/custom/oddball_assets.vpk"
 
 # # Make a zip folder containing everything
-release_zip: all $(custom_dir)/goongame_assets.vpk
-	cp -u $(WEAPON_MODEL_DIR)/../goongame_assets.vpk $(custom_dir)/goongame_assets.vpk 
-	zip -r goongame.zip fof
+release_zip: all $(custom_dir)/oddball_assets.vpk
+	cp -u $(WEAPON_MODEL_DIR)/../oddball_assets.vpk $(custom_dir)/oddball_assets.vpk 
+	zip -r oddball.zip fof
 
 clean:
 	$(RM) fof/addons/sourcemod/configs/*.txt
 	$(RM) fof/addons/sourcemod/gamedata/*.txt
 	$(RM) fof/addons/sourcemod/plugins/*.smx
 	$(RM) fof/custom/*.vpk
-	$(RM) $(WEAPON_MODEL_DIR)/../goongame_assets.vpk
-	$(RM) -r $(WEAPON_MODEL_DIR)/../goongame_assets
+	$(RM) $(WEAPON_MODEL_DIR)/../oddball_assets.vpk
+	$(RM) -r $(WEAPON_MODEL_DIR)/../oddball_assets
 	$(RM) "$(FOF_INSTALL_DIR)/fof/custom/*.vpk"
 	$(RM) $(FOF_SERVER_DIR)/fof/custom/*.vpk
 	
