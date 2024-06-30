@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Development
+.venv
+.vscode
+fof
+
+# wsl weirdness
+*:Zone.Identifier
